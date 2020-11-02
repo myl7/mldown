@@ -61,7 +61,7 @@ export const rawFilter: Filter = src => {
   if (sep == -1) {
     sep = remain.length
   }
-  const content = remain.substring(0, sep)
+  const content = remain.substring(0, sep + 1)
   remain = remain.substring(sep + 5)
   return [remain, new Raw(content)]
 }
