@@ -1,8 +1,9 @@
 import {filter} from './index'
 import {BlankLine, CodeBlock, H1, H2, H3, H4, H5, H6, Tbreak, Raw, Paragraph} from '../ast/leafBlocks'
+import {Quote} from '../ast/cntrBlocks'
 
 describe('merged filter', () => {
-  it('leaf only', () => {
+  it('some leaf blocks', () => {
     const [remain0, node0] = filter('# title0 and title1\n\n```c\nint main() {\n}\n```\n')
     expect(node0).toEqual(new H1('title0 and title1'))
     const [remain1, node1] = filter(remain0)
@@ -11,7 +12,8 @@ describe('merged filter', () => {
     expect(node2).toEqual(new CodeBlock('int main() {\n}\n', 'c'))
     expect(remain2).toEqual('')
   })
-  it('all leaves', () => {
+
+  it('all leaf blocks', () => {
     const src = `\
 # h1
 ## h2
@@ -84,6 +86,28 @@ ss
     let remain = src
     let node
     for (let i = 0; i < 25; i++) {
+      [remain, node] = filter(remain)
+      expect(node).toEqual(nodes[i])
+    }
+    expect(remain).toEqual('')
+  })
+
+  it('some cntr blocks', () => {
+    const src = '> Hello\n>\n> I am fine.\n> Thank you.\n>\n\n# h1 come out\n'
+    const nodes = [
+      new Quote([
+        new Paragraph('Hello\n'),
+        new BlankLine(),
+        new Paragraph('I am fine.\nThank you.\n'),
+        new BlankLine()
+      ]),
+      new BlankLine(),
+      new H1('h1 come out')
+    ]
+
+    let remain = src
+    let node
+    for (let i = 0; i < 3; i++) {
       [remain, node] = filter(remain)
       expect(node).toEqual(nodes[i])
     }
