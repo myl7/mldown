@@ -13,7 +13,7 @@ export const tbreakFilter: Filter = src => {
 
 const hFilterBuilder = (i: number): Filter => {
   return src => {
-    const res = new RegExp(`^${'#'.repeat(i)} ([^\n])\n`).exec(src)
+    const res = new RegExp(`^${'#'.repeat(i)}(?: ([^\n]+))?\n`).exec(src)
     if (!res) {
       return [src]
     }
@@ -25,22 +25,25 @@ const hFilterBuilder = (i: number): Filter => {
   }
 }
 
-export const hFilter = or(...Array(6).map((_, i) => hFilterBuilder(i + 1)))
+export const hFilter = or(
+  hFilterBuilder(1), hFilterBuilder(2), hFilterBuilder(3), hFilterBuilder(4), hFilterBuilder(5),
+  hFilterBuilder(6)
+)
 
 export const codeBlockFilter: Filter = src => {
-  let res = /^```([\n]*)\n/.exec(src)
+  let res = /^```([^\n]*)\n/.exec(src)
   if (!res) {
     return [src]
   }
 
   let remain = src.substring(res[0].length)
-  const infoStr = src[1] ? src[1] : undefined
+  const infoStr = res[1] ? res[1] : undefined
 
   let sep = remain.search(/\n```(\n|$)/)
   if (sep == -1) {
     sep = remain.length
   }
-  const content = remain.substring(0, sep)
+  const content = remain.substring(0, sep + 1)
   remain = remain.substring(sep + 5)
   return [remain, new CodeBlock(content, infoStr)]
 }
@@ -68,7 +71,10 @@ export const paragraphFilter: Filter = src => {
     return [src]
   }
 
-  const sep = src.search('\n\n')
+  let sep = src.search('\n\n')
+  if (sep == -1) {
+    sep = src.length
+  }
   const remain = src.substring(sep + 2)
   const content = src.substring(0, sep + 1)
   return [remain, new Paragraph(content)]

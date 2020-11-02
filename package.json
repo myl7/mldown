@@ -4,7 +4,7 @@
   "description": "Markdown dialect based on GFM for post writing",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "bash build.sh"
   },
   "keywords": [
@@ -22,7 +22,13 @@
   },
   "homepage": "https://github.com/myl7/mldown#readme",
   "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-typescript": "^7.12.1",
+    "@types/jest": "^26.0.15",
+    "babel-jest": "^26.6.2",
     "esbuild": "^0.8.0",
+    "jest": "^26.6.2",
     "typescript": "^4.0.5"
   }
 }

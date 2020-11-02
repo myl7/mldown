@@ -11,7 +11,7 @@ export const parser = (src: string): AstNode[] => {
   while (remain) {
     const [newRemain, node] = filter(remain)
     remain = newRemain
-    nodes.push(node)
+    nodes.push(node!)
   }
   return nodes
 }
