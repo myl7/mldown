@@ -1,6 +1,8 @@
 import {Filter} from './types'
 import {Olist, Quote, Ulist} from '../ast/cntrBlocks'
 import {AstNode} from '../ast/types'
+import {or} from './op'
+import {parser} from './index'
 
 const lineMarkerFilter = (marker: string, builder: (lines: string[]) => AstNode): Filter => {
   return src => {
@@ -28,6 +30,12 @@ const lineMarkerFilter = (marker: string, builder: (lines: string[]) => AstNode)
   }
 }
 
-export const quoteFilter: Filter = lineMarkerFilter('>', lines => new Quote([]))
+export const quoteFilter: Filter = lineMarkerFilter('>', lines => {
+  const children = parser(lines.join('\n') + '\n')
+  return new Quote(children)
+})
+
 export const ulistFilter: Filter = lineMarkerFilter('-', lines => new Ulist([]))
 export const olistFilter: Filter = lineMarkerFilter('\d', lines => new Olist([]))
+
+export const cntrBlockFilter: Filter = or(quoteFilter, ulistFilter, olistFilter)

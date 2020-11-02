@@ -1,8 +1,17 @@
 import {or} from './op'
-import {olistFilter, quoteFilter, ulistFilter} from './cntrBlocks'
-import {blankLineFilter, codeBlockFilter, hFilter, paragraphFilter, rawFilter, tbreakFilter} from './leafBlocks'
+import {cntrBlockFilter} from './cntrBlocks'
+import {leafBlockFilter} from './leafBlocks'
+import {AstNode} from '../ast/types'
 
-export const filter = or(
-  quoteFilter, ulistFilter, olistFilter, tbreakFilter, hFilter, codeBlockFilter, rawFilter, paragraphFilter,
-  blankLineFilter
-)
+export const filter = or(cntrBlockFilter, leafBlockFilter)
+
+export const parser = (src: string): AstNode[] => {
+  let remain = src
+  let nodes = []
+  while (remain) {
+    const [newRemain, node] = filter(remain)
+    remain = newRemain
+    nodes.push(node)
+  }
+  return nodes
+}

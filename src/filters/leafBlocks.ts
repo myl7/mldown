@@ -82,3 +82,7 @@ export const blankLineFilter: Filter = src => {
   const remain = src.substring(1)
   return [remain, new BlankLine()]
 }
+
+export const leafBlockFilter: Filter = or(
+  tbreakFilter, hFilter, codeBlockFilter, rawFilter, paragraphFilter, blankLineFilter
+)
