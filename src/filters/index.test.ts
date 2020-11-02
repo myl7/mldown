@@ -1,6 +1,6 @@
 import {filter} from './index'
 import {BlankLine, CodeBlock, H1, H2, H3, H4, H5, H6, Tbreak, Raw, Paragraph} from '../ast/leafBlocks'
-import {Quote} from '../ast/cntrBlocks'
+import {Olist, Quote, Ulist} from '../ast/cntrBlocks'
 
 describe('merged filter', () => {
   it('some leaf blocks', () => {
@@ -92,14 +92,12 @@ ss
     expect(remain).toEqual('')
   })
 
-  it('some cntr blocks', () => {
+  it('some quote cntr blocks', () => {
     const src = '> Hello\n>\n> I am fine.\n> Thank you.\n>\n\n# h1 come out\n'
     const nodes = [
       new Quote([
         new Paragraph('Hello\n'),
-        new BlankLine(),
         new Paragraph('I am fine.\nThank you.\n'),
-        new BlankLine()
       ]),
       new BlankLine(),
       new H1('h1 come out')
@@ -108,6 +106,34 @@ ss
     let remain = src
     let node
     for (let i = 0; i < 3; i++) {
+      [remain, node] = filter(remain)
+      expect(node).toEqual(nodes[i])
+    }
+    expect(remain).toEqual('')
+  })
+
+  it('some list cntr blocks', () => {
+    const src = '- a\n- b\n-\n```c\nWell\nI can do it\n```\n- d\n\nHello\n\n3.\n# A title\n2. b\n4. ok ok\n9. well\n'
+    const nodes = [
+      new Ulist([
+        'a',
+        'b',
+        new CodeBlock('Well\nI can do it\n', 'c'),
+        'd'
+      ]),
+      new BlankLine(),
+      new Paragraph('Hello\n'),
+      new Olist([
+        new H1('A title'),
+        'b',
+        'ok ok',
+        'well'
+      ], 3)
+    ]
+
+    let remain = src
+    let node
+    for (let i = 0; i < 5; i++) {
       [remain, node] = filter(remain)
       expect(node).toEqual(nodes[i])
     }

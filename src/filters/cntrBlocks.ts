@@ -3,6 +3,7 @@ import {Olist, Quote, Ulist} from '../ast/cntrBlocks'
 import {or} from './op'
 import {filter, parser} from './index'
 
+// Require refactoring.
 export const quoteFilter: Filter = src => {
   if (!new RegExp(`^>([ \n]|$)`).test(src)) {
     return [src]
@@ -13,10 +14,10 @@ export const quoteFilter: Filter = src => {
   const n = lines.length
   for (let i = 0; i < n; i++) {
     const line = lines.pop()!
-    if (new RegExp(`^> `).test(line)) {
+    if (/^> /.test(line)) {
       childLines.push(line.substring(2))
-    } else if (new RegExp(`^>$`).test(line)) {
-      childLines.push('\n')
+    } else if (/^>$/.test(line)) {
+      childLines.push('')
     } else {
       lines.push(line)
       break
@@ -24,13 +25,13 @@ export const quoteFilter: Filter = src => {
   }
 
   const remain = lines.reverse().join('\n')
-  const content = childLines.join('\n') + '\n'
+  const content = childLines.join('\n')
   const children = parser(content)
   return [remain, new Quote(children)]
 }
 
 export const ulistFilter: Filter = src => {
-  if (!new RegExp(`^-([ \n]|$)`).test(src)) {
+  if (!/^-([ \n]|$)/.test(src)) {
     return [src]
   }
 
@@ -44,10 +45,10 @@ export const ulistFilter: Filter = src => {
     }
     const line = remain.substring(0, sep)
 
-    if (new RegExp(`^- `).test(line) && !isBlockItem) {
+    if (/^- /.test(line) && !isBlockItem) {
       items.push(line.substring(2))
       remain = remain.substring(sep + 1)
-    } else if (new RegExp(`^-$`).test(line) && !isBlockItem) {
+    } else if (/^-$/.test(line) && !isBlockItem) {
       isBlockItem = true
       remain = remain.substring(sep + 1)
     } else if (isBlockItem) {
@@ -68,7 +69,7 @@ export const ulistFilter: Filter = src => {
 }
 
 export const olistFilter: Filter = src => {
-  const res = new RegExp(`^(\d)\.(?:[ \n]|$)`).exec(src)
+  const res = /^(\d)\.(?:[ \n]|$)/.exec(src)
   if (!res) {
     return [src]
   }
@@ -85,10 +86,10 @@ export const olistFilter: Filter = src => {
     }
     const line = remain.substring(0, sep)
 
-    if (new RegExp(`^\d\. `).test(line) && !isBlockItem) {
+    if (/^\d\. /.test(line) && !isBlockItem) {
       items.push(line.substring(3))
       remain = remain.substring(sep + 1)
-    } else if (new RegExp(`^\d\.$`).test(line) && !isBlockItem) {
+    } else if (/^\d\.$/.test(line) && !isBlockItem) {
       isBlockItem = true
       remain = remain.substring(sep + 1)
     } else if (isBlockItem) {
