@@ -1,0 +1,28 @@
+{
+  "name": "mldown",
+  "version": "0.1.0",
+  "description": "Markdown dialect based on GFM for post writing",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "bash build.sh"
+  },
+  "keywords": [
+    "markdown",
+    "writing"
+  ],
+  "author": "myl7",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/myl7/mldown.git"
+  },
+  "bugs": {
+    "url": "https://github.com/myl7/mldown/issues"
+  },
+  "homepage": "https://github.com/myl7/mldown#readme",
+  "devDependencies": {
+    "esbuild": "^0.8.0",
+    "typescript": "^4.0.5"
+  }
+}
