@@ -11,19 +11,19 @@ export class Quote implements AstNode {
 
 export class Ulist implements AstNode {
   type = 'ulist'
-  items: AstNode[]
+  items: (AstNode|string)[]
 
-  constructor(items: AstNode[]) {
+  constructor(items: (AstNode|string)[]) {
     this.items = items
   }
 }
 
 export class Olist implements AstNode {
   type = 'olist'
-  items: AstNode[]
+  items: (AstNode|string)[]
   start?: number
 
-  constructor(items: AstNode[], start?: number) {
+  constructor(items: (AstNode|string)[], start?: number) {
     this.items = items
     this.start = start
   }
