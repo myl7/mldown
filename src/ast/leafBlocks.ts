@@ -58,10 +58,10 @@ export class Raw implements AstNode {
 
 export class Paragraph implements AstNode {
   type = 'paragraph'
-  content: string
+  children: AstNode[]
 
-  constructor(content: string) {
-    this.content = content
+  constructor(children: AstNode[]) {
+    this.children = children
   }
 }
 

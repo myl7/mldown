@@ -1,6 +1,7 @@
 import {filter} from './index'
 import {BlankLine, CodeBlock, H1, H2, H3, H4, H5, H6, Tbreak, Raw, Paragraph} from '../ast/leafBlocks'
 import {Olist, Quote, Ulist} from '../ast/cntrBlocks'
+import {Plain} from '../ast/inlines'
 
 describe('merged filter', () => {
   it('some leaf blocks', () => {
@@ -80,7 +81,9 @@ ss
       new BlankLine(),
       new Raw('<Div></Div>\nraw content\n'),
       new BlankLine(),
-      new Paragraph('test test  test est\nhi h hi ddd\nsd si l\nss\n super user\n')
+      new Paragraph([
+        new Plain('test test  test est\nhi h hi ddd\nsd si l\nss\n super user\n')
+      ])
     ]
 
     let remain = src
@@ -96,8 +99,12 @@ ss
     const src = '> Hello\n>\n> I am fine.\n> Thank you.\n>\n\n# h1 come out\n'
     const nodes = [
       new Quote([
-        new Paragraph('Hello\n'),
-        new Paragraph('I am fine.\nThank you.\n'),
+        new Paragraph([
+          new Plain('Hello\n')
+        ]),
+        new Paragraph([
+          new Plain('I am fine.\nThank you.\n')
+        ])
       ]),
       new BlankLine(),
       new H1('h1 come out')
@@ -122,7 +129,9 @@ ss
         'd'
       ]),
       new BlankLine(),
-      new Paragraph('Hello\n'),
+      new Paragraph([
+        new Plain('Hello\n')
+      ]),
       new Olist([
         new H1('A title'),
         'b',

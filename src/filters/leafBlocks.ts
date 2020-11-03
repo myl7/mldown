@@ -1,6 +1,7 @@
 import {Filter} from './types'
 import {Tbreak, H1, H2, H3, H4, H5, H6, CodeBlock, Raw, Paragraph, BlankLine} from '../ast/leafBlocks'
 import {or} from './op'
+import {inlineParser} from './inlines'
 
 export const tbreakFilter: Filter = src => {
   if (!/^---\n/.test(src)) {
@@ -77,7 +78,8 @@ export const paragraphFilter: Filter = src => {
   }
   const remain = src.substring(sep + 2)
   const content = src.substring(0, sep + 1)
-  return [remain, new Paragraph(content)]
+  const children = inlineParser(content)
+  return [remain, new Paragraph(children)]
 }
 
 export const blankLineFilter: Filter = src => {
