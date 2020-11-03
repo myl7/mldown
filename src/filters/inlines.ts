@@ -5,7 +5,11 @@ import {or} from './op'
 
 const pairFilterBuilder = (marker: string, builder: (content: string) => AstNode): Filter => {
   return src => {
-    const res = new RegExp(`^${marker}((?:[^\`]|\\\\${marker})+)${marker}$`).exec(src)
+    if (src[0] != marker[marker.length - 1]) {
+      return [src]
+    }
+
+    const res = new RegExp(`^${marker}((?:[^\`]|\\\\${marker})+?)${marker}`).exec(src)
     if (!res) {
       return [src]
     }
@@ -20,28 +24,31 @@ const emFilter: Filter = pairFilterBuilder('\\*', c => new Em(c))
 const strongFilter: Filter = pairFilterBuilder('\\*\\*', c => new Strong(c))
 const delFilter: Filter = pairFilterBuilder('~~', c => new Del(c))
 
-const linkLikeFilter = (startRegex: RegExp, builder: (label: string, url: string, title?: string) => AstNode): Filter => {
+const linkLikeFilter = (startStr: string, builder: (label: string, url: string, title?: string) => AstNode): Filter => {
   return src => {
-    let res = startRegex.exec(src)
-    if (!res) {
+    if (src.substring(0, startStr.length) != startStr) {
       return [src]
     }
-    let remain = src.substring(res[0].length)
+    let remain = src.substring(startStr.length)
 
-    res = /^\[((?:[^\]]|\\])+)]\(((?:[^)]|\\\))+)\)/.exec(src)
-    if (!res) {
+    if (remain[0] != '[') {
       return [src]
     }
 
-    remain = src.substring(res.length)
+    let res = /^\[((?:[^\]]|\\])+?)]\(((?:[^)]|\\\))+?)\)/.exec(remain)
+    if (!res) {
+      return [src]
+    }
+
+    remain = remain.substring(res[0].length)
     const label = res[1]
     const urlInfo = res[2]
 
-    res = /^([^ ]+) '((?:[^']|\\')*)'$/.exec(urlInfo)
+    res = /^([^ ]+?) '((?:[^']|\\')*?)'$/.exec(urlInfo)
     if (!res) {
-      res = /^([^ ]+) "((?:[^"]|\\")*)"$/.exec(urlInfo)
+      res = /^([^ ]+?) "((?:[^"]|\\")*?)"$/.exec(urlInfo)
       if (!res) {
-        res = /^([^ ]+)$/.exec(urlInfo)
+        res = /^([^ ]+?)$/.exec(urlInfo)
         if (!res) {
           return [src]
         }
@@ -54,20 +61,25 @@ const linkLikeFilter = (startRegex: RegExp, builder: (label: string, url: string
   }
 }
 
-const linkFilter: Filter = linkLikeFilter(/^/, (l, u, t) => new Link(l, u, t))
-const imgFilter: Filter = linkLikeFilter(/^!/, (l, u, t) => new Img(l, u, t))
+const linkFilter: Filter = linkLikeFilter('', (l, u, t) => new Link(l, u, t))
+const imgFilter: Filter = linkLikeFilter('!', (l, u, t) => new Img(l, u, t))
 
 const autolinkFilter: Filter = src => {
-  let res = /^<([^>]+)>/.exec(src)
+  if (src[0] != '<') {
+    return [src]
+  }
+
+  let res = /^<([^>]+?)>/.exec(src)
   if (!res) {
     return [src]
   }
+  const remain = src.substring(res[0].length)
   const content = res[1]
-  return [src, new Autolink(content)]
+  return [remain, new Autolink(content)]
 }
 
 const inlineSpecialFilter: Filter = or(
-  codeSpanFilter, emFilter, strongFilter, delFilter, linkFilter, imgFilter, autolinkFilter
+  strongFilter, delFilter, codeSpanFilter, emFilter, linkFilter, imgFilter, autolinkFilter
 )
 
 export const inlineParser = (src: string): AstNode[] => {

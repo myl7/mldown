@@ -1,7 +1,7 @@
 import {filter} from './index'
 import {BlankLine, CodeBlock, H1, H2, H3, H4, H5, H6, Tbreak, Raw, Paragraph} from '../ast/leafBlocks'
 import {Olist, Quote, Ulist} from '../ast/cntrBlocks'
-import {Plain} from '../ast/inlines'
+import {Autolink, CodeSpan, Del, Em, Img, Link, Plain, Strong} from '../ast/inlines'
 
 describe('merged filter', () => {
   it('some leaf blocks', () => {
@@ -88,7 +88,7 @@ ss
 
     let remain = src
     let node
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < nodes.length; i++) {
       [remain, node] = filter(remain)
       expect(node).toEqual(nodes[i])
     }
@@ -112,7 +112,7 @@ ss
 
     let remain = src
     let node
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < nodes.length; i++) {
       [remain, node] = filter(remain)
       expect(node).toEqual(nodes[i])
     }
@@ -142,7 +142,65 @@ ss
 
     let remain = src
     let node
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < nodes.length; i++) {
+      [remain, node] = filter(remain)
+      expect(node).toEqual(nodes[i])
+    }
+    expect(remain).toEqual('')
+  })
+
+  it('all paragraph inlines', () => {
+    const src = `\
+test this is a paragraph
+I want to \`say\` he*something***about**~~that~~.
+\`no\` not every one **can* *do that*
+I hope [you](/here "yes") [can](/there 'not')
+ [not bad](/ee '\\'') and [not\\]  yes](/ "\\"")
+![you](can "see") me ? well [that](/test) ok
+here <you> will ![](need] ![it](//)
+
+Ok I am fine now
+`
+    const nodes = [
+      new Paragraph([
+        new Plain('test this is a paragraph\nI want to '),
+        new CodeSpan('say'),
+        new Plain(' he'),
+        new Em('something'),
+        new Strong('about'),
+        new Del('that'),
+        new Plain('.\n'),
+        new CodeSpan('no'),
+        new Plain(' not every one '),
+        new Em('*can'),
+        new Plain(' '),
+        new Em('do that'),
+        new Plain('\nI hope '),
+        new Link('you', '/here', 'yes'),
+        new Plain(' '),
+        new Link('can', '/there', 'not'),
+        new Plain('\n '),
+        new Link('not bad', '/ee', '\\\''),
+        new Plain(' and '),
+        new Link('not\\]  yes', '/', '\\"'),
+        new Plain('\n'),
+        new Img('you', 'can', 'see'),
+        new Plain(' me ? well '),
+        new Link('that', '/test'),
+        new Plain(' ok\nhere '),
+        new Autolink('you'),
+        new Plain(' will ![](need] '),
+        new Img('it', '//'),
+        new Plain('\n')
+      ]),
+      new Paragraph([
+        new Plain('Ok I am fine now\n')
+      ])
+    ]
+
+    let remain = src
+    let node
+    for (let i = 0; i < nodes.length; i++) {
       [remain, node] = filter(remain)
       expect(node).toEqual(nodes[i])
     }
