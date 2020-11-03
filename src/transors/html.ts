@@ -39,7 +39,8 @@ export class htmlTransor implements Transor {
   }
 
   codeBlock(node: CodeBlock): string {
-    return `<pre><code class="language-${node.infoStr}">${node.content}</code></pre>`
+    const infoStr = node.infoStr ? ` class="language-${node.infoStr}"` : ''
+    return `<pre><code${infoStr}>${node.content}</code></pre>`
   }
 
   raw(node: Raw): string {
@@ -65,8 +66,8 @@ export class htmlTransor implements Transor {
 
   olist(node: Olist): string {
     const itemBuilder = (n: AstNode|string) => typeof n == 'string' ? n : trans(n, this)
-    const start = node.start ? `start="${node.start}"` : ''
-    return `<ol ${start}>${node.items.map(n => `<li>${itemBuilder(n)}</li>`).join('')}</ol>`
+    const start = node.start ? ` start="${node.start}"` : ''
+    return `<ol${start}>${node.items.map(n => `<li>${itemBuilder(n)}</li>`).join('')}</ol>`
   }
 
   codeSpan(node: CodeSpan): string {
@@ -86,13 +87,13 @@ export class htmlTransor implements Transor {
   }
 
   link(node: Link): string {
-    const title = node.title ? `title="${node.title}"` : ''
-    return `<a href="${node.url}" ${title}>${node.label}</a>`
+    const title = node.title ? ` title="${node.title}"` : ''
+    return `<a href="${node.url}"${title}>${node.label}</a>`
   }
 
   img(node: Img): string {
-    const title = node.title ? `title="${node.title}"` : ''
-    return `<img src="${node.url}" alt="${node.alt}" ${title} />`
+    const title = node.title ? ` title="${node.title}"` : ''
+    return `<img src="${node.url}" alt="${node.alt}"${title} />`
   }
 
   autolink(node: Autolink): string {
