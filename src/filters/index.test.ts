@@ -171,8 +171,8 @@ Ok I am fine now
         new Del('that'),
         new Plain('.\n'),
         new CodeSpan('no'),
-        new Plain(' not every one '),
-        new Em('*can'),
+        new Plain(' not every one *'),
+        new Em('can'),
         new Plain(' '),
         new Em('do that'),
         new Plain('\nI hope '),
@@ -196,6 +196,115 @@ Ok I am fine now
       new Paragraph([
         new Plain('Ok I am fine now\n')
       ])
+    ]
+
+    let remain = src
+    let node
+    for (let i = 0; i < nodes.length; i++) {
+      [remain, node] = filter(remain)
+      expect(node).toEqual(nodes[i])
+    }
+    expect(remain).toEqual('')
+  })
+
+  it('actual post', () => {
+    const src = `\
+## Problem
+
+Today I am writting a Telegram bot.
+I choose YAML to display the results for users.
+The results are requested by \`requests\`, parsed by \`Beautiful Soup\`, and finally dumped by \`PyYAML\`, which is a common plan.
+However, when testing, a strange error comes out:
+
+\`\`\`
+# Tons of traceback info, all from \`yaml/representer.py\`.
+RecursionError: maximum recursion depth exceeded in __instancecheck__
+\`\`\`
+
+But the dumped Python dict is just simple, and you can easily copy it and dump it in a Python shell.
+
+After a long time web searching, I finally realize what I have done.
+
+## Beautiful Soup: \`NavigableString\`
+
+Let us start from Beautiful Soup.
+I find out that I have used \`tag.string\` to get the text node in HTML, and pass it to PyYAML to dump it to readable text.
+Here is a point: **Beautiful Soup \`tag.string\` returns \`NavigableString\`, not Python builti-in \`str\`.**
+The \`NavigableString\` carries a reference to the entire Beautiful Soup parse tree, and provides some extra methods that working on it.
+The original documentation text from [here](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#navigablestring) is:
+
+> If you want to use a \`NavigableString\` outside of Beautiful Soup, you should call \`unicode()\` on it to turn it into a normal Python Unicode string.
+> If you don’t, your string will carry around a reference to the entire Beautiful Soup parse tree, even when you’re done using Beautiful Soup.
+> This is a big waste of memory.
+
+So we should call \`str()\` to convert \`NavigableString\` to \`str\`.
+
+## PyYAML: \`safe_dump\`
+`
+    const nodes = [
+      new H2('Problem'),
+      new BlankLine(),
+      new Paragraph([
+        new Plain('Today I am writting a Telegram bot.\n' +
+          'I choose YAML to display the results for users.\n' +
+          'The results are requested by '),
+        new CodeSpan('requests'),
+        new Plain(', parsed by '),
+        new CodeSpan('Beautiful Soup'),
+        new Plain(', and finally dumped by '),
+        new CodeSpan('PyYAML'),
+        new Plain(', which is a common plan.\n' +
+          'However, when testing, a strange error comes out:\n')
+      ]),
+      new CodeBlock('# Tons of traceback info, all from `yaml/representer.py`.\n' +
+        'RecursionError: maximum recursion depth exceeded in __instancecheck__\n'),
+      new BlankLine(),
+      new Paragraph([
+        new Plain('But the dumped Python dict is just simple, ' +
+          'and you can easily copy it and dump it in a Python shell.\n')
+      ]),
+      new Paragraph([
+        new Plain('After a long time web searching, I finally realize what I have done.\n')
+      ]),
+      new H2('Beautiful Soup: `NavigableString`'),
+      new BlankLine(),
+      new Paragraph([
+        new Plain('Let us start from Beautiful Soup.\n' +
+          'I find out that I have used '),
+        new CodeSpan('tag.string'),
+        new Plain(' to get the text node in HTML, and pass it to PyYAML to dump it to readable text.\n' +
+          'Here is a point: '),
+        new Strong('Beautiful Soup `tag.string` returns `NavigableString`, not Python builti-in `str`.'),
+        new Plain('\nThe '),
+        new CodeSpan('NavigableString'),
+        new Plain(' carries a reference to the entire Beautiful Soup parse tree, ' +
+          'and provides some extra methods that working on it.\n' +
+          'The original documentation text from '),
+        new Link('here', 'https://www.crummy.com/software/BeautifulSoup/bs4/doc/#navigablestring'),
+        new Plain(' is:\n')
+      ]),
+      new Quote([
+        new Paragraph([
+          new Plain('If you want to use a '),
+          new CodeSpan('NavigableString'),
+          new Plain(' outside of Beautiful Soup, you should call '),
+          new CodeSpan('unicode()'),
+          new Plain(' on it to turn it into a normal Python Unicode string.\n' +
+            'If you don’t, your string will carry around a reference to the entire Beautiful Soup parse tree, even when you’re done using Beautiful Soup.\n' +
+            'This is a big waste of memory.')
+        ])
+      ]),
+      new BlankLine(),
+      new Paragraph([
+        new Plain('So we should call '),
+        new CodeSpan('str()'),
+        new Plain(' to convert '),
+        new CodeSpan('NavigableString'),
+        new Plain(' to '),
+        new CodeSpan('str'),
+        new Plain('.\n')
+      ]),
+      new H2('PyYAML: `safe_dump`')
     ]
 
     let remain = src

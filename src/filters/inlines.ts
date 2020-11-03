@@ -3,26 +3,65 @@ import {AstNode} from '../ast/types'
 import {Autolink, CodeSpan, Del, Em, Img, Link, Plain, Strong} from '../ast/inlines'
 import {or} from './op'
 
-const pairFilterBuilder = (marker: string, builder: (content: string) => AstNode): Filter => {
-  return src => {
-    if (src[0] != marker[marker.length - 1]) {
-      return [src]
-    }
-
-    const res = new RegExp(`^${marker}((?:[^\`]|\\\\${marker})+?)${marker}`).exec(src)
-    if (!res) {
-      return [src]
-    }
-    const remain = src.substring(res[0].length)
-    const content = res[1]
-    return [remain, builder(content)]
+const codeSpanFilter: Filter = src => {
+  if (src[0] != '`') {
+    return [src]
   }
+
+  const res = /^`([^`]+?)`/.exec(src)
+  if (!res) {
+    return [src]
+  }
+
+  const remain = src.substring(res[0].length)
+  const content = res[1]
+  return [remain, new CodeSpan(content)]
 }
 
-const codeSpanFilter: Filter = pairFilterBuilder('`', c => new CodeSpan(c))
-const emFilter: Filter = pairFilterBuilder('\\*', c => new Em(c))
-const strongFilter: Filter = pairFilterBuilder('\\*\\*', c => new Strong(c))
-const delFilter: Filter = pairFilterBuilder('~~', c => new Del(c))
+const emFilter: Filter = src => {
+  if (src[0] != '*') {
+    return [src]
+  }
+
+  const res = /^\*([^*]+?)\*/.exec(src)
+  if (!res) {
+    return [src]
+  }
+
+  const remain = src.substring(res[0].length)
+  const content = res[1]
+  return [remain, new Em(content)]
+}
+
+const strongFilter: Filter = src => {
+  if (src.substring(0, 2) != '**') {
+    return [src]
+  }
+
+  const res = /^\*\*([^*]+?)\*\*/.exec(src)
+  if (!res) {
+    return [src]
+  }
+
+  const remain = src.substring(res[0].length)
+  const content = res[1]
+  return [remain, new Strong(content)]
+}
+
+const delFilter: Filter = src => {
+  if (src.substring(0, 2) != '~~') {
+    return [src]
+  }
+
+  const res = /^~~([^~]+?)~~/.exec(src)
+  if (!res) {
+    return [src]
+  }
+
+  const remain = src.substring(res[0].length)
+  const content = res[1]
+  return [remain, new Del(content)]
+}
 
 const linkLikeFilter = (startStr: string, builder: (label: string, url: string, title?: string) => AstNode): Filter => {
   return src => {
