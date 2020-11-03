@@ -2,8 +2,14 @@ import {Transor} from './types'
 import {Tbreak, H1, H2, H3, H4, H5, H6, CodeBlock, Raw, Paragraph, BlankLine} from '../ast/leafBlocks'
 import {Olist, Quote, Ulist} from '../ast/cntrBlocks'
 import {Autolink, CodeSpan, Del, Em, Img, Link, Plain, Strong} from '../ast/inlines'
+import {trans} from './utils'
+import {AstNode} from '../ast/types'
 
 export class htmlTransor implements Transor {
+  exec(nodes: AstNode[]): string {
+    return nodes.map(n => trans(n, this)).join('')
+  }
+
   tbreak(_node: Tbreak): string {
     return '<hr />'
   }
@@ -41,8 +47,7 @@ export class htmlTransor implements Transor {
   }
 
   paragraph(node: Paragraph): string {
-    // @ts-ignore
-    return `<p>${node.children.map(n => (this[n.type])(n)).join('')}</p>`
+    return `<p>${node.children.map(n => trans(n, this)).join('')}</p>`
   }
 
   blankLine(_node: BlankLine): string {
@@ -50,19 +55,18 @@ export class htmlTransor implements Transor {
   }
 
   quote(node: Quote): string {
-    // @ts-ignore
-    return `<blockquote>${node.children.map(n => (this[n.type])(n)).join('')}</blockquote>`
+    return `<blockquote>${node.children.map(n => trans(n, this)).join('')}</blockquote>`
   }
 
   ulist(node: Ulist): string {
-    // @ts-ignore
-    return `<ul>${node.items.map(n => `<li>${(this[n.type])(n)}</li>`).join('')}</ul>`
+    const itemBuilder = (n: AstNode|string) => typeof n == 'string' ? n : trans(n, this)
+    return `<ul>${node.items.map(n => `<li>${itemBuilder(n)}</li>`).join('')}</ul>`
   }
 
   olist(node: Olist): string {
+    const itemBuilder = (n: AstNode|string) => typeof n == 'string' ? n : trans(n, this)
     const start = node.start ? `start="${node.start}"` : ''
-    // @ts-ignore
-    return `<ol ${start}>${node.items.map(n => `<li>${(this[n.type])(n)}</li>`).join('')}</ol>`
+    return `<ol ${start}>${node.items.map(n => `<li>${itemBuilder(n)}</li>`).join('')}</ol>`
   }
 
   codeSpan(node: CodeSpan): string {
