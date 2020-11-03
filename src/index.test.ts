@@ -1,12 +1,12 @@
 import mldown from './index'
-import {htmlTransor} from './transors/html'
+import HtmlTransor from './transors/html'
 
 describe('exported parser', () => {
   it('html transor simple', () => {
     const src = '# Test\n\n```c\nint main() {\n  return 0;\n}\n```\n\nTest\n'
     const html = '<h1>Test</h1><pre><code class="language-c">int main() {\n  return 0;\n}\n</code></pre><p>Test\n</p>'
 
-    expect(mldown(src, new htmlTransor())).toEqual(html)
+    expect(mldown(src, new HtmlTransor())).toEqual(html)
   })
 
   it('html transor actual post', () => {
@@ -143,6 +143,6 @@ len(inspect.stack())
 </code></pre>\
 `
 
-    expect(mldown(src, new htmlTransor())).toEqual(html)
+    expect(mldown(src, new HtmlTransor())).toEqual(html)
   })
 })

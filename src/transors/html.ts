@@ -5,7 +5,7 @@ import {Autolink, CodeSpan, Del, Em, Img, Link, Plain, Strong} from '../ast/inli
 import {trans} from './utils'
 import {AstNode} from '../ast/types'
 
-export class htmlTransor implements Transor {
+export default class HtmlTransor implements Transor {
   exec(nodes: AstNode[]): string {
     return nodes.map(n => trans(n, this)).join('')
   }
