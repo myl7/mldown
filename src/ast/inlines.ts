@@ -1,10 +1,10 @@
 import {AstNode} from './types'
 
 abstract class Paired {
-  content: string
+  children: AstNode[]
 
-  constructor(content: string) {
-    this.content = content
+  constructor(children: AstNode[]) {
+    this.children = children
   }
 }
 

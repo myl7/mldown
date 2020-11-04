@@ -72,19 +72,19 @@ export class MaterialUITransor implements Transor {
   }
 
   codeSpan(node: CodeSpan): string {
-    return `<Box component="code" fontFamily="Source Code Pro">${node.content}</Box>`
+    return `<Box component="code" fontFamily="Source Code Pro">${node.children}</Box>`
   }
 
   em(node: Em): string {
-    return `<Box fontStyle="italic">${node.content}</Box>`
+    return `<Box fontStyle="italic">${node.children}</Box>`
   }
 
   strong(node: Strong): string {
-    return `<Box fontWeight="fontWeightBold">${node.content}</Box>`
+    return `<Box fontWeight="fontWeightBold">${node.children}</Box>`
   }
 
   del(node: Del): string {
-    return `<del>${node.content}</del>`
+    return `<del>${node.children}</del>`
   }
 
   link(node: Link): string {

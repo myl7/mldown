@@ -79,10 +79,10 @@ ss
       new BlankLine(),
       new CodeBlock('HW\n', 'c info'),
       new BlankLine(),
-      new Raw('<Div></Div>\nraw content\n'),
+      new Raw('<Div></Div>\nraw content'),
       new BlankLine(),
       new Paragraph([
-        new Plain('test test  test est\nhi h hi ddd\nsd si l\nss\n super user\n')
+        new Plain('test test  test est\nhi h hi ddd\nsd si l\nss\n super user')
       ])
     ]
 
@@ -100,10 +100,10 @@ ss
     const nodes = [
       new Quote([
         new Paragraph([
-          new Plain('Hello\n')
+          new Plain('Hello')
         ]),
         new Paragraph([
-          new Plain('I am fine.\nThank you.\n')
+          new Plain('I am fine.\nThank you.')
         ])
       ]),
       new BlankLine(),
@@ -130,7 +130,7 @@ ss
       ]),
       new BlankLine(),
       new Paragraph([
-        new Plain('Hello\n')
+        new Plain('Hello')
       ]),
       new Olist([
         new H1('A title'),
@@ -164,17 +164,17 @@ Ok I am fine now
     const nodes = [
       new Paragraph([
         new Plain('test this is a paragraph\nI want to '),
-        new CodeSpan('say'),
+        new CodeSpan([new Plain('say')]),
         new Plain(' he'),
-        new Em('something'),
-        new Strong('about'),
-        new Del('that'),
+        new Em([new Plain('something')]),
+        new Strong([new Plain('about')]),
+        new Del([new Plain('that')]),
         new Plain('.\n'),
-        new CodeSpan('no'),
+        new CodeSpan([new Plain('no')]),
         new Plain(' not every one *'),
-        new Em('can'),
+        new Em([new Plain('can')]),
         new Plain(' '),
-        new Em('do that'),
+        new Em([new Plain('do that')]),
         new Plain('\nI hope '),
         new Link('you', '/here', 'yes'),
         new Plain(' '),
@@ -190,11 +190,10 @@ Ok I am fine now
         new Plain(' ok\nhere '),
         new Autolink('you'),
         new Plain(' will ![](need] '),
-        new Img('it', '//'),
-        new Plain('\n')
+        new Img('it', '//')
       ]),
       new Paragraph([
-        new Plain('Ok I am fine now\n')
+        new Plain('Ok I am fine now')
       ])
     ]
 
@@ -248,47 +247,55 @@ So we should call \`str()\` to convert \`NavigableString\` to \`str\`.
         new Plain('Today I am writting a Telegram bot.\n' +
           'I choose YAML to display the results for users.\n' +
           'The results are requested by '),
-        new CodeSpan('requests'),
+        new CodeSpan([new Plain('requests')]),
         new Plain(', parsed by '),
-        new CodeSpan('Beautiful Soup'),
+        new CodeSpan([new Plain('Beautiful Soup')]),
         new Plain(', and finally dumped by '),
-        new CodeSpan('PyYAML'),
+        new CodeSpan([new Plain('PyYAML')]),
         new Plain(', which is a common plan.\n' +
-          'However, when testing, a strange error comes out:\n')
+          'However, when testing, a strange error comes out:')
       ]),
       new CodeBlock('# Tons of traceback info, all from `yaml/representer.py`.\n' +
         'RecursionError: maximum recursion depth exceeded in __instancecheck__\n'),
       new BlankLine(),
       new Paragraph([
         new Plain('But the dumped Python dict is just simple, ' +
-          'and you can easily copy it and dump it in a Python shell.\n')
+          'and you can easily copy it and dump it in a Python shell.')
       ]),
       new Paragraph([
-        new Plain('After a long time web searching, I finally realize what I have done.\n')
+        new Plain('After a long time web searching, I finally realize what I have done.')
       ]),
       new H2('Beautiful Soup: `NavigableString`'),
       new BlankLine(),
       new Paragraph([
         new Plain('Let us start from Beautiful Soup.\n' +
           'I find out that I have used '),
-        new CodeSpan('tag.string'),
+        new CodeSpan([new Plain('tag.string')]),
         new Plain(' to get the text node in HTML, and pass it to PyYAML to dump it to readable text.\n' +
           'Here is a point: '),
-        new Strong('Beautiful Soup `tag.string` returns `NavigableString`, not Python builti-in `str`.'),
+        new Strong([
+          new Plain('Beautiful Soup '),
+          new CodeSpan([new Plain('tag.string')]),
+          new Plain(' returns '),
+          new CodeSpan([new Plain('NavigableString')]),
+          new Plain(', not Python builti-in '),
+          new CodeSpan([new Plain('str')]),
+          new Plain('.')
+        ]),
         new Plain('\nThe '),
-        new CodeSpan('NavigableString'),
+        new CodeSpan([new Plain('NavigableString')]),
         new Plain(' carries a reference to the entire Beautiful Soup parse tree, ' +
           'and provides some extra methods that working on it.\n' +
           'The original documentation text from '),
         new Link('here', 'https://www.crummy.com/software/BeautifulSoup/bs4/doc/#navigablestring'),
-        new Plain(' is:\n')
+        new Plain(' is:')
       ]),
       new Quote([
         new Paragraph([
           new Plain('If you want to use a '),
-          new CodeSpan('NavigableString'),
+          new CodeSpan([new Plain('NavigableString')]),
           new Plain(' outside of Beautiful Soup, you should call '),
-          new CodeSpan('unicode()'),
+          new CodeSpan([new Plain('unicode()')]),
           new Plain(' on it to turn it into a normal Python Unicode string.\n' +
             'If you don’t, your string will carry around a reference to the entire Beautiful Soup parse tree, even when you’re done using Beautiful Soup.\n' +
             'This is a big waste of memory.')
@@ -297,12 +304,12 @@ So we should call \`str()\` to convert \`NavigableString\` to \`str\`.
       new BlankLine(),
       new Paragraph([
         new Plain('So we should call '),
-        new CodeSpan('str()'),
+        new CodeSpan([new Plain('str()')]),
         new Plain(' to convert '),
-        new CodeSpan('NavigableString'),
+        new CodeSpan([new Plain('NavigableString')]),
         new Plain(' to '),
-        new CodeSpan('str'),
-        new Plain('.\n')
+        new CodeSpan([new Plain('str')]),
+        new Plain('.')
       ]),
       new H2('PyYAML: `safe_dump`')
     ]

@@ -62,7 +62,7 @@ export const rawFilter: Filter = src => {
   if (sep == -1) {
     sep = remain.length
   }
-  const content = remain.substring(0, sep + 1)
+  const content = remain.substring(0, sep)
   remain = remain.substring(sep + 5)
   return [remain, new Raw(content)]
 }
@@ -75,9 +75,12 @@ export const paragraphFilter: Filter = src => {
   let sep = src.search('\n\n')
   if (sep == -1) {
     sep = src.length
+    while (sep - 1 >= 0 && src[sep - 1] == '\n') {
+      sep -= 1
+    }
   }
   const remain = src.substring(sep + 2)
-  const content = src.substring(0, sep + 1)
+  const content = src.substring(0, sep)
   const children = inlineParser(content)
   return [remain, new Paragraph(children)]
 }

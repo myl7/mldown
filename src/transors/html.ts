@@ -1,5 +1,5 @@
 import {Transor} from './types'
-import {Tbreak, H1, H2, H3, H4, H5, H6, CodeBlock, Raw, Paragraph, BlankLine} from '../ast/leafBlocks'
+import {BlankLine, CodeBlock, H1, H2, H3, H4, H5, H6, Paragraph, Raw, Tbreak} from '../ast/leafBlocks'
 import {Olist, Quote, Ulist} from '../ast/cntrBlocks'
 import {Autolink, CodeSpan, Del, Em, Img, Link, Plain, Strong} from '../ast/inlines'
 import {trans} from './utils'
@@ -71,19 +71,19 @@ export default class HtmlTransor implements Transor {
   }
 
   codeSpan(node: CodeSpan): string {
-    return `<code>${node.content}</code>`
+    return `<code>${node.children.map(n => trans(n, this)).join('')}</code>`
   }
 
   em(node: Em): string {
-    return `<em>${node.content}</em>`
+    return `<em>${node.children.map(n => trans(n, this)).join('')}</em>`
   }
 
   strong(node: Strong): string {
-    return `<strong>${node.content}</strong>`
+    return `<strong>${node.children.map(n => trans(n, this)).join('')}</strong>`
   }
 
   del(node: Del): string {
-    return `<del>${node.content}</del>`
+    return `<del>${node.children.map(n => trans(n, this)).join('')}</del>`
   }
 
   link(node: Link): string {
@@ -101,6 +101,6 @@ export default class HtmlTransor implements Transor {
   }
 
   plain(node: Plain): string {
-    return node.content
+    return node.content.replace(/\n/g, ' ')
   }
 }

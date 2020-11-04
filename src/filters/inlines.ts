@@ -15,7 +15,8 @@ const codeSpanFilter: Filter = src => {
 
   const remain = src.substring(res[0].length)
   const content = res[1]
-  return [remain, new CodeSpan(content)]
+  const children = inlineParser(content)
+  return [remain, new CodeSpan(children)]
 }
 
 const emFilter: Filter = src => {
@@ -30,7 +31,8 @@ const emFilter: Filter = src => {
 
   const remain = src.substring(res[0].length)
   const content = res[1]
-  return [remain, new Em(content)]
+  const children = inlineParser(content)
+  return [remain, new Em(children)]
 }
 
 const strongFilter: Filter = src => {
@@ -45,7 +47,8 @@ const strongFilter: Filter = src => {
 
   const remain = src.substring(res[0].length)
   const content = res[1]
-  return [remain, new Strong(content)]
+  const children = inlineParser(content)
+  return [remain, new Strong(children)]
 }
 
 const delFilter: Filter = src => {
@@ -60,7 +63,8 @@ const delFilter: Filter = src => {
 
   const remain = src.substring(res[0].length)
   const content = res[1]
-  return [remain, new Del(content)]
+  const children = inlineParser(content)
+  return [remain, new Del(children)]
 }
 
 const linkLikeFilter = (startStr: string, builder: (label: string, url: string, title?: string) => AstNode): Filter => {
