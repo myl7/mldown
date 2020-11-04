@@ -8,7 +8,7 @@ const codeSpanFilter: Filter = src => {
     return [src]
   }
 
-  const res = /^`([^`]+?)`/.exec(src)
+  const res = /^`((?:[^`]|\\`)+?)`/.exec(src)
   if (!res) {
     return [src]
   }
@@ -24,7 +24,7 @@ const emFilter: Filter = src => {
     return [src]
   }
 
-  const res = /^\*([^*]+?)\*/.exec(src)
+  const res = /^\*((?:[^*]|\\\*)+?)\*/.exec(src)
   if (!res) {
     return [src]
   }
@@ -40,7 +40,7 @@ const strongFilter: Filter = src => {
     return [src]
   }
 
-  const res = /^\*\*([^*]+?)\*\*/.exec(src)
+  const res = /^\*\*((?:[^*]|\\\*)+?)\*\*/.exec(src)
   if (!res) {
     return [src]
   }
@@ -56,7 +56,7 @@ const delFilter: Filter = src => {
     return [src]
   }
 
-  const res = /^~~([^~]+?)~~/.exec(src)
+  const res = /^~~((?:[^~]|\\~)+?)~~/.exec(src)
   if (!res) {
     return [src]
   }
@@ -84,8 +84,8 @@ const linkLikeFilter = (startStr: string, builder: (label: string, url: string, 
     }
 
     remain = remain.substring(res[0].length)
-    const label = res[1]
-    const urlInfo = res[2]
+    const label = res[1].replace(/\\]/g, ']')
+    const urlInfo = res[2].replace(/\\\)/g, ')')
 
     res = /^([^ ]+?) '((?:[^']|\\')*?)'$/.exec(urlInfo)
     if (!res) {
@@ -99,7 +99,10 @@ const linkLikeFilter = (startStr: string, builder: (label: string, url: string, 
     }
 
     const url = res[1]
-    const title = res[2]
+    let title = res[2]
+    if (title) {
+      title = title.replace(/\\'/g, '\'').replace(/\\"/g, '"')
+    }
     return [remain, builder(label, url, title)]
   }
 }
@@ -135,6 +138,12 @@ export const inlineParser = (src: string): AstNode[] => {
       break
     }
 
+    if (remain[0] == '\\') {
+      text += remain[1]
+      remain = remain.substring(2)
+      continue
+    }
+
     [remain, node] = inlineSpecialFilter(remain)
     if (node == undefined) {
       // Require escape.
@@ -142,6 +151,9 @@ export const inlineParser = (src: string): AstNode[] => {
       remain = remain.substring(1)
     } else {
       if (text) {
+        text = text.replace(/\\`/g, '`')
+          .replace(/\\\*/g, '*')
+          .replace(/\\~/g, '~')
         nodes.push(new Plain(text))
         text = ''
       }
