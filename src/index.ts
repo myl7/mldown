@@ -1,4 +1,4 @@
-import {parser} from './filters/index'
+import {parser} from './filters'
 import {Transor} from './transors/types'
 
 export default (src: string, transor: Transor): string => {

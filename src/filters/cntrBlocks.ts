@@ -1,7 +1,7 @@
 import {Filter} from './types'
 import {Olist, Quote, Ulist} from '../ast/cntrBlocks'
 import {or} from './op'
-import {filter, parser} from './index'
+import {filter, parser} from '.'
 
 // Require refactoring.
 export const quoteFilter: Filter = src => {

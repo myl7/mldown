@@ -1,4 +1,4 @@
-import mldown from './index'
+import mldown from '.'
 import HtmlTransor from './transors/html'
 import {MaterialUITransor} from './transors/materialUI'
 

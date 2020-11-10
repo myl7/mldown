@@ -1,4 +1,4 @@
-import {filter} from './index'
+import {filter} from '.'
 import {BlankLine, CodeBlock, H1, H2, H3, H4, H5, H6, Tbreak, Raw, Paragraph} from '../ast/leafBlocks'
 import {Olist, Quote, Ulist} from '../ast/cntrBlocks'
 import {Autolink, CodeSpan, Del, Em, Img, Link, Plain, Strong} from '../ast/inlines'
