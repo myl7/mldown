@@ -2,10 +2,14 @@
   "name": "mldown",
   "version": "0.1.0",
   "description": "Markdown dialect based on GFM for post writing",
-  "main": "src/index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "test": "jest",
-    "build": "bash build.sh"
+    "build": "tsc"
   },
   "keywords": [
     "markdown",
@@ -27,8 +31,9 @@
     "@babel/preset-typescript": "^7.12.1",
     "@types/jest": "^26.0.15",
     "babel-jest": "^26.6.2",
-    "esbuild": "^0.8.0",
-    "jest": "^26.6.2",
+    "jest": "^26.6.2"
+  },
+  "optionalDependencies": {
     "typescript": "^4.0.5"
   }
 }

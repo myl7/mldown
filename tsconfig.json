@@ -10,9 +10,14 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "declaration": true,
+    "outDir": "./dist"
   },
   "include": [
     "src"
+  ],
+  "exclude": [
+    "src/**/*.test.ts"
   ]
 }
