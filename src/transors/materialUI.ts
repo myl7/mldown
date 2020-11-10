@@ -39,9 +39,9 @@ export class MaterialUITransor implements Transor {
   }
 
   codeBlock(node: CodeBlock): string {
-    const infoStr = node.infoStr ? ` class="language-${node.infoStr}"` : ''
+    const infoStr = node.infoStr ? `class="language-${node.infoStr}"` : ''
     const content = node.content.replace(/\n/g, '{\'\\n\'}')
-    return `<pre><Box component="code" fontFamily="Source Code Pro"${infoStr}>${content}</Box></pre>`
+    return `<pre><Box component="code" fontFamily="Source Code Pro" ${infoStr}>${content}</Box></pre>`
   }
 
   raw(node: Raw): string {
@@ -68,33 +68,33 @@ export class MaterialUITransor implements Transor {
   olist(node: Olist): string {
     const itemBuilder = (n: AstNode|string) => typeof n == 'string' ? n : trans(n, this)
     const start = node.start ? ` start="${node.start}"` : ''
-    return `<ol${start}>${node.items.map(n => `<li>${itemBuilder(n)}</li>`).join('')}</ol>`
+    return `<ol ${start}>${node.items.map(n => `<li>${itemBuilder(n)}</li>`).join('')}</ol>`
   }
 
   codeSpan(node: CodeSpan): string {
-    return `<Box component="code" fontFamily="Source Code Pro">${node.children}</Box>`
+    return `<Box component="code" fontFamily="Source Code Pro">${node.children.map(n => trans(n, this))}</Box>`
   }
 
   em(node: Em): string {
-    return `<Box fontStyle="italic">${node.children}</Box>`
+    return `<Box fontStyle="italic">${node.children.map(n => trans(n, this))}</Box>`
   }
 
   strong(node: Strong): string {
-    return `<Box fontWeight="fontWeightBold">${node.children}</Box>`
+    return `<Box fontWeight="fontWeightBold">${node.children.map(n => trans(n, this))}</Box>`
   }
 
   del(node: Del): string {
-    return `<del>${node.children}</del>`
+    return `<del>${node.children.map(n => trans(n, this))}</del>`
   }
 
   link(node: Link): string {
     const title = node.title ? ` title="${node.title}"` : ''
-    return `<Link href="${node.url}"${title}>${node.label}</Link>`
+    return `<Link href="${node.url}" ${title}>${node.label}</Link>`
   }
 
   img(node: Img): string {
     const title = node.title ? ` title="${node.title}"` : ''
-    return `<img src="${node.url}" alt="${node.alt}"${title} />`
+    return `<img src="${node.url}" alt="${node.alt}" ${title} />`
   }
 
   autolink(node: Autolink): string {
