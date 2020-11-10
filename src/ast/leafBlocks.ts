@@ -5,9 +5,9 @@ export class Tbreak implements AstNode {
 }
 
 abstract class Head {
-  title?: string
+  title: AstNode[]
 
-  constructor(title?: string) {
+  constructor(title: AstNode[]) {
     this.title = title
   }
 }

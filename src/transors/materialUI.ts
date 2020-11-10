@@ -15,27 +15,33 @@ export class MaterialUITransor implements Transor {
   }
 
   h1(node: H1): string {
-    return `<Typography component="h1">${node.title}</Typography>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<Typography component="h1">${title}</Typography>`
   }
 
   h2(node: H2): string {
-    return `<Typography component="h2">${node.title}</Typography>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<Typography component="h2">${title}</Typography>`
   }
 
   h3(node: H3): string {
-    return `<Typography component="h3">${node.title}</Typography>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<Typography component="h3">${title}</Typography>`
   }
 
   h4(node: H4): string {
-    return `<Typography component="h4">${node.title}</Typography>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<Typography component="h4">${title}</Typography>`
   }
 
   h5(node: H5): string {
-    return `<Typography component="h5">${node.title}</Typography>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<Typography component="h5">${title}</Typography>`
   }
 
   h6(node: H6): string {
-    return `<Typography component="h6">${node.title}</Typography>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<Typography component="h6">${title}</Typography>`
   }
 
   codeBlock(node: CodeBlock): string {

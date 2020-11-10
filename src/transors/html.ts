@@ -15,27 +15,33 @@ export default class HtmlTransor implements Transor {
   }
 
   h1(node: H1): string {
-    return `<h1>${node.title}</h1>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<h1>${title}</h1>`
   }
 
   h2(node: H2): string {
-    return `<h2>${node.title}</h2>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<h2>${title}</h2>`
   }
 
   h3(node: H3): string {
-    return `<h3>${node.title}</h3>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<h3>${title}</h3>`
   }
 
   h4(node: H4): string {
-    return `<h4>${node.title}</h4>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<h4>${title}</h4>`
   }
 
   h5(node: H5): string {
-    return `<h5>${node.title}</h5>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<h5>${title}</h5>`
   }
 
   h6(node: H6): string {
-    return `<h6>${node.title}</h6>`
+    const title = node.title ? node.title.map(n => trans(n, this)).join('') : ''
+    return `<h6>${title}</h6>`
   }
 
   codeBlock(node: CodeBlock): string {

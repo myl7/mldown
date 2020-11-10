@@ -6,7 +6,7 @@ import {Autolink, CodeSpan, Del, Em, Img, Link, Plain, Strong} from '../ast/inli
 describe('merged filter', () => {
   it('some leaf blocks', () => {
     const [remain0, node0] = filter('# title0 and title1\n\n```c\nint main() {\n}\n```\n')
-    expect(node0).toEqual(new H1('title0 and title1'))
+    expect(node0).toEqual(new H1([new Plain('title0 and title1')]))
     const [remain1, node1] = filter(remain0)
     expect(node1).toEqual(new BlankLine())
     const [remain2, node2] = filter(remain1)
@@ -25,7 +25,7 @@ describe('merged filter', () => {
 
 ##### h5
 
-######
+###### a
 
 ---
 
@@ -57,16 +57,16 @@ ss
  super user
 `
     const nodes = [
-      new H1('h1'),
-      new H2('h2'),
-      new H3('h3'),
+      new H1([new Plain('h1')]),
+      new H2([new Plain('h2')]),
+      new H3([new Plain('h3')]),
       new BlankLine(),
-      new H4('h4'),
+      new H4([new Plain('h4')]),
       new BlankLine(),
       new BlankLine(),
-      new H5('h5'),
+      new H5([new Plain('h5')]),
       new BlankLine(),
-      new H6(),
+      new H6([new Plain('a')]),
       new BlankLine(),
       new Tbreak(),
       new BlankLine(),
@@ -107,7 +107,7 @@ ss
         ])
       ]),
       new BlankLine(),
-      new H1('h1 come out')
+      new H1([new Plain('h1 come out')])
     ]
 
     let remain = src
@@ -133,7 +133,7 @@ ss
         new Plain('Hello')
       ]),
       new Olist([
-        new H1('A title'),
+        new H1([new Plain('A title')]),
         'b',
         'ok ok',
         'well'
@@ -241,7 +241,7 @@ So we should call \`str()\` to convert \`NavigableString\` to \`str\`.
 ## PyYAML: \`safe_dump\`
 `
     const nodes = [
-      new H2('Problem'),
+      new H2([new Plain('Problem')]),
       new BlankLine(),
       new Paragraph([
         new Plain('Today I am writting a Telegram bot.\n' +
@@ -265,7 +265,10 @@ So we should call \`str()\` to convert \`NavigableString\` to \`str\`.
       new Paragraph([
         new Plain('After a long time web searching, I finally realize what I have done.')
       ]),
-      new H2('Beautiful Soup: `NavigableString`'),
+      new H2([
+        new Plain('Beautiful Soup: '),
+        new CodeSpan([new Plain('NavigableString')])
+      ]),
       new BlankLine(),
       new Paragraph([
         new Plain('Let us start from Beautiful Soup.\n' +
@@ -311,7 +314,10 @@ So we should call \`str()\` to convert \`NavigableString\` to \`str\`.
         new CodeSpan([new Plain('str')]),
         new Plain('.')
       ]),
-      new H2('PyYAML: `safe_dump`')
+      new H2([
+        new Plain('PyYAML: '),
+        new CodeSpan([new Plain('safe_dump')])
+      ])
     ]
 
     let remain = src

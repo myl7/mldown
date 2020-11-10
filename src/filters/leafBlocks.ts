@@ -20,7 +20,7 @@ const hFilterBuilder = (i: number): Filter => {
     }
 
     const remain = src.substring(res[0].length)
-    const title = res[1]
+    const title = inlineParser(res[1])
     const Head = [undefined, H1, H2, H3, H4, H5, H6][i]!
     return [remain, new Head(title)]
   }
