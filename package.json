@@ -1,6 +1,6 @@
 {
   "name": "mldown",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Markdown dialect based on GFM for post writing",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
