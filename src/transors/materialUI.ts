@@ -46,7 +46,10 @@ export class MaterialUITransor implements Transor {
 
   codeBlock(node: CodeBlock): string {
     const infoStr = node.infoStr ? `class="language-${node.infoStr}"` : ''
-    const content = node.content.replace(/\n/g, '{\'\\n\'}')
+    const content = node.content
+      .replace(/[{}]/g, m => `{'${m}'}`)
+      .replace(/\n/g, '{\'\\n\'}')
+      .replace(/</g, '&lt;')
     return `<pre><Box component="code" fontFamily="Source Code Pro" ${infoStr}>${content}</Box></pre>`
   }
 
@@ -95,7 +98,7 @@ export class MaterialUITransor implements Transor {
 
   link(node: Link): string {
     const title = node.title ? ` title="${node.title}"` : ''
-    return `<Link href="${node.url}" ${title}>${node.label}</Link>`
+    return `<Link href="${node.url}" ${title}>${node.label.replace(/</g, '&lt;')}</Link>`
   }
 
   img(node: Img): string {
@@ -108,6 +111,9 @@ export class MaterialUITransor implements Transor {
   }
 
   plain(node: Plain): string {
-    return node.content.replace(/\n/g, '{\'\\n\'}')
+    return node.content
+      .replace(/[{}]/g, m => `{'${m}'}`)
+      .replace(/\n/g, '{\'\\n\'}')
+      .replace(/</g, '&lt;')
   }
 }
